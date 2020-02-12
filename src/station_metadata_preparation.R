@@ -25,5 +25,6 @@ for(year in years){
     }
 }
 names(data) = gsub('start ','',names(data))
+names(data) = gsub(" ", "_", names(data))
 dbWriteTable(con, "stationdata",data)
 dbDisconnect(con)

@@ -25,5 +25,6 @@ for(year in years){
         }
     }
 }
+names(data) = gsub(" ", "_", names(data))
 dbWriteTable(con, "tripdata",data)
 dbDisconnect(con)
