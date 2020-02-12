@@ -1,0 +1,127 @@
+\documentclass{beamer}
+\usepackage{graphicx}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{eso-pic}
+\usepackage{mathrsfs}
+\usepackage{url}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{booktabs}
+% \usepackage{bbm}
+\usepackage{cooltooltips}
+\usepackage{colordef}
+\usepackage{beamerdefs}
+\usepackage{lvblisting}
+\usepackage{listings}
+
+\pgfdeclareimage[height=2cm]{logobig}{logo}
+\pgfdeclareimage[height=0.7cm]{logosmall}{logo}
+
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\titlescale}{1.0}
+\renewcommand{\leftcol}{0.6}
+
+\title[Analysis of Citibike Data]{Analysis of Citibike Data}
+\authora{Christian Koopmann}
+\authorb{}
+\authorc{}
+
+
+\def\linka{}
+\def\linkb{}
+\def\linkc{}
+
+% \institute{AXA Konzern AG \\
+% Colonia Allee 10-20\\
+% 51067 Köln \\}
+
+\hypersetup{pdfpagemode=FullScreen}
+
+\begin{document}
+\lstset{language=R}
+% 0-1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame[plain]{
+
+\titlepage
+}
+
+% No Number on the Outline Slide
+\useheadtemplate{%
+    \raisebox{-0.75cm}{\parbox{\textwidth}{%
+            \footnotesize{\color{isegray}%
+                \insertsection\ \leavevmode\leaders\hrule height3.2pt depth-2.8pt\hfill\kern0pt\ }}}
+}
+
+
+
+% 0-3
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Outline}
+
+\tableofcontents{}
+
+}
+
+\section{Motivation}
+% 0-2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\frame{
+\frametitle{Motivation}
+\begin{itemize}
+\item What I am going to do
+\end{itemize}
+}
+
+\section{Trips / Users}
+\frame{
+\frametitle{Something about trips users}
+\begin{itemize}
+\item Lorem Ipsum
+\end{itemize}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{\string"../plots/density_durations_by_type\string".jpeg}
+\end{figure}
+}
+
+\section{The Network}
+\frame{
+\frametitle{Something about trips users}
+\begin{itemize}
+\item Lorem Ipsum
+\end{itemize}
+}
+
+\section{Classification Model}
+\frame{
+\frametitle{Classification Subscribers / Customers}
+\begin{itemize}
+\item Lorem Ipsum
+\end{itemize}
+% \input{val_eval_cv.tex}
+}
+
+\section{Travel Speed}
+\frame{
+\frametitle{Are bikes faster than public transport?}
+\begin{itemize}
+\item Lorem Ipsum
+\end{itemize}
+}
+
+% No number on outline slide
+\useheadtemplate{%
+    \raisebox{-0.75cm}{\parbox{\textwidth}{%
+            \footnotesize{\color{isegray}%
+                \insertsection\ \leavevmode\leaders\hrule height3.2pt depth-2.8pt\hfill\kern0pt\ \thesection-\thepage}}}}
+\setcounter{section}{1}
+
+
+\end{document}
