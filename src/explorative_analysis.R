@@ -13,10 +13,11 @@ design = function(x) x + theme_few() + scale_fill_economist() + scale_colour_eco
 
 
 ride_data = as.data.table(dbGetQuery(con, 'SELECT tripduration, usertype, birth_year, gender FROM tripdata'))
+ride_data[, age:= 2018-birth_year]
 
-averages = ride_data[,.(usertype= 'All', trips=.N, age = mean(2018 - birth_year), tripduration=mean(tripduration)/60, 
+averages = ride_data[,.(usertype= 'All', trips=.N, age = mean(age), tripduration=mean(tripduration)/60, 
                         unknown_gender = mean(gender==0), male  = mean(gender==1), female = mean(gender==2))]
-averages_by_type = ride_data[,.(trips=.N, age = mean(2018 - birth_year), tripduration=mean(tripduration)/60, 
+averages_by_type = ride_data[,.(trips=.N, age = mean(age), tripduration=mean(tripduration)/60, 
                                 unknown_gender = mean(gender==0), male  = mean(gender==1), female = mean(gender==2)),
                             by=usertype]
 averages = rbind(averages, averages_by_type)
@@ -38,11 +39,30 @@ print(tex_table,
       latex.environments=c("myresizeenv"), 
       booktabs=T)
 
-duration_cutoff = 60*60
+duration_cutoff = 90*60
 above_cutoff = ride_data[,mean(tripduration>duration_cutoff)]
 density_durations_by_type = design(ggplot(data=ride_data[tripduration<=duration_cutoff], aes(x=tripduration/60, fill=usertype, col=usertype)) +
                                    labs(title="Distribution of Trip Duration by Usertype", x="Duration [min]", y="Density")+
                                    geom_density(alpha=0.5))
 ggsave(density_durations_by_type, file = paste0(plot_directory, 'density_durations_by_type.jpeg'), width=10, height=5) 
+
+
+age_cutoff = 90
+binwidth = 1
+above_cutoff = ride_data[,mean(age>age_cutoff)]
+histogram_age_by_type = design(ggplot(data=ride_data[age<=age_cutoff], aes(x=age, fill=usertype, col=usertype)) +
+                                   labs(title="Distribution of user age by Usertype", x="age [years]", y="Count")+
+                                   geom_histogram(aes(y=binwidth*..density..),binwidth=binwidth, alpha=0.5, position='identity'))
+ggsave(histogram_age_by_type, file = paste0(plot_directory, 'histogram_age_by_type.jpeg'), width=10, height=5) 
+
+
+above_cutoff = ride_data[,mean(age>age_cutoff)]
+ride_data[, gender_data:='Known']
+ride_data[gender==0, gender_data:='Unknown']
+histogram_age_by_type_gender = design(ggplot(data=ride_data[age<=age_cutoff], aes(x=age, fill=usertype, col=usertype)) +
+                                   labs(title="Distribution of user age by Usertype", x="age [years]", y="Count")+
+                                   geom_histogram(aes(y=binwidth*..density..),binwidth=binwidth, alpha=0.5, position='identity')+
+                                   facet_grid(gender_data~., scales='free'))
+ggsave(histogram_age_by_type_gender, file = paste0(plot_directory, 'histogram_age_by_type_gender.jpeg'), width=10, height=5) 
 
 
