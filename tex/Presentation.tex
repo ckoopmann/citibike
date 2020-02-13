@@ -20,6 +20,9 @@
 \usepackage{lvblisting}
 \usepackage{listings}
 
+\usepackage{environ}
+\NewEnviron{myresizeenv}{\resizebox{\linewidth}{!}{\BODY}}
+
 \pgfdeclareimage[height=2cm]{logobig}{logo}
 \pgfdeclareimage[height=0.7cm]{logosmall}{logo}
 
@@ -105,7 +108,7 @@
 \begin{itemize}
 \item Lorem Ipsum
 \end{itemize}
-% \input{val_eval_cv.tex}
+\input{averages.tex}
 }
 
 \section{Travel Speed}
