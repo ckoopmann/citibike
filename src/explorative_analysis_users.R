@@ -28,13 +28,34 @@ averages[, female:=100*female]
 averages[, unknown_gender:=100*unknown_gender]
 averages = averages[order(-usertype)]
 averages[, trips := round(trips / 1e6, 1)]
-
 names(averages) = c("Type", "Trips[mio]", "Age[y]", "Duration[min]", "Unknown[%]", "Male[%]", "Female[%]")
 tex_table = xtable(averages)
-align(tex_table) = 'c|cccccc'
+# align(tex_table) = 'c|cccccc'
 print(tex_table,
       hline.after=c(-1,0,2,3),
       file=paste0(table_directory,'averages.tex'),
+      include.rownames=F,
+      latex.environments=c("myresizeenv"), 
+      booktabs=T)
+
+averages_knowngender = ride_data[gender != 0,.(usertype= 'All', trips=.N, age = mean(age), tripduration=mean(tripduration)/60, 
+                        male  = mean(gender==1), female = mean(gender==2))]
+averages_knowngender_by_type = ride_data[gender != 0,.(trips=.N, age = mean(age), tripduration=mean(tripduration)/60, 
+                                male  = mean(gender==1), female = mean(gender==2)),
+                            by=usertype]
+averages_knowngender = rbind(averages_knowngender, averages_knowngender_by_type)
+averages_knowngender[,male := male/(1-unknown_gender)]
+averages_knowngender[,female := female/(1-unknown_gender)]
+averages_knowngender[, male:=100*male]
+averages_knowngender[, female:=100*female]
+averages_knowngender = averages_knowngender[order(-usertype)]
+averages_knowngender[, trips := round(trips / 1e6, 1)]
+names(averages_knowngender) = c("Type", "Trips[mio]", "Age[y]", "Duration[min]", "Male[%]", "Female[%]")
+tex_table = xtable(averages_knowngender)
+# align(tex_table) = 'c|cccccc'
+print(tex_table,
+      hline.after=c(-1,0,2,3),
+      file=paste0(table_directory,'averages_knowngender.tex'),
       include.rownames=F,
       latex.environments=c("myresizeenv"), 
       booktabs=T)
