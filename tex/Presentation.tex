@@ -86,7 +86,7 @@
 \section{Trips / Users}
 
 \frame{
-\frametitle{Customers are older, more diverse and take their time}
+\frametitle{Customers seem to be older, more diverse and take their time}
 \input{averages.tex}
 }
 
@@ -99,7 +99,7 @@
 
 
 \frame{
-    \frametitle{Users with unknown Gender seem to be a data quality problem}
+    \frametitle{Users with unknown Gender seem to have a data quality problem}
     \begin{figure}
         \includegraphics[width=0.8\textwidth]{\string"../plots/histogram_age_by_type_gender\string".jpeg}
     \end{figure}
@@ -116,6 +116,30 @@
 \begin{figure}
 \includegraphics[width=0.8\textwidth]{\string"../plots/density_durations_by_type\string".jpeg}
 \end{figure}
+}
+
+\frame{
+\frametitle{Commuting Subscribers vs. Vacationing Customers}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{\string"../plots/histogram_hour_by_type\string".jpeg}
+\end{figure}
+}
+
+\frame{
+\frametitle{Commuting Subscribers vs. Vacationing Customers}
+\begin{figure}
+\includegraphics[width=0.8\textwidth]{\string"../plots/histogram_weekday_by_type\string".jpeg}
+\end{figure}
+}
+
+\frame{
+\frametitle{Conclusion Userdata}
+\begin{itemize}
+\item Customers are younger, more female and take longer trips
+\item Demographic data (age/gender) on customers largely incomplete
+\item Missingness of gender is an obvious input feature to identify customers but might be of less use in actual practice
+\item Two modelling approaches: with / without using demographic data as input
+\end{itemize}
 }
 
 \section{The Network}
