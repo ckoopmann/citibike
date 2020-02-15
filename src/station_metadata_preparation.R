@@ -20,11 +20,14 @@ for(year in years){
         if(file.exists(filepath)){
             print(paste("Reading: ", filepath))
             new_data = unique(fread(filepath, colClasses=colClasses, stringsAsFactors=FALSE))
+            names(new_data) = gsub('start ','',names(data))
+            names(new_data) = gsub(" ", "_", names(data))
             data = unique(rbind(data, new_data, fill=TRUE))
         }
     }
 }
 names(data) = gsub('start ','',names(data))
 names(data) = gsub(" ", "_", names(data))
-dbWriteTable(con, "stationdata",data)
+data = data[station_id != 'NULL',]
+dbWriteTable(con, "stationdata",data, overwrite=T)
 dbDisconnect(con)

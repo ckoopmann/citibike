@@ -6,7 +6,7 @@ file_pattern = "%s%02d-citibike-tripdata.csv"
 data_folder = 'data/'
 years = 2018
 months = 1:12
-colClasses = c('starttime'='POSIXct', 'stoptime'='POSIXct',
+colClasses = c('starttime'='POSIXct', 'stoptime'='POSIXct')
                'start station name'='NULL', 'start station longitude'='NULL','start station latitude'='NULL',
                'end station name'='NULL', 'end station longitude'='NULL','end station latitude'='NULL')
 data = data.table()

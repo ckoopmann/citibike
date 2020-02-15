@@ -1,6 +1,7 @@
 data
 Challenge.pdf
 .Rhistory
+.Renviron
 .RData
 **.png
 **.pdf
