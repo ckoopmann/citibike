@@ -73,17 +73,7 @@
 
 }
 
-\section{Motivation}
-% 0-2
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\frame{
-\frametitle{Motivation}
-\begin{itemize}
-\item What I am going to do
-\end{itemize}
-}
-
-\section{Trips / Users}
+\section{Exploratory Analysis}
 
 \frame{
 \frametitle{Customers seem to be older, more diverse and take their time}
@@ -133,21 +123,43 @@
 }
 
 \frame{
-\frametitle{Conclusion Userdata}
-\begin{itemize}
-\item Customers are younger, more female and take longer trips
-\item Demographic data (age/gender) on customers largely incomplete
-\item Missingness of gender is an obvious input feature to identify customers but might be of less use in actual practice
-\item Two modelling approaches: with / without using demographic data as input
-\end{itemize}
-}
-
-\section{The Network}
-\frame{
 \frametitle{Most popular starting stations for customers in tourist hotspots}
 \begin{figure}
 \includegraphics[height=0.8\textheight]{\string"../plots/start_station_map\string".jpeg}
 \end{figure}
+}
+
+\frame{
+\frametitle{Conclusions}
+\begin{columns}
+    \begin{column}{0.48\textwidth}
+        \begin{center}
+            \underline{Customer}
+        \end{center}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{center}
+            \underline{Subscriber}
+        \end{center}
+    \end{column}
+\end{columns}
+\begin{columns}
+    \begin{column}{0.48\textwidth}
+        \begin{itemize}
+            \item Longer Trips
+            \item Peak during weekend and afternoon hours
+            \item High concentration of trips around tourist hotspots (Central Park)
+            \item Data Quality Issues regarding demographic data
+        \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+        \begin{itemize}
+            \item Shorter Trips 
+            \item Peak during the week and morning/evening rush hours
+            \item Distributed across variety of stations in the business district
+        \end{itemize}
+    \end{column}
+\end{columns}
 }
 
 \section{Classification Model}
