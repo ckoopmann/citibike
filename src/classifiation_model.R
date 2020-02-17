@@ -7,6 +7,7 @@ library(xtable)
 library(lubridate)
 library(randomForest)
 library(pROC)
+library(caret)
 
 plot_directory = 'plots/'
 table_directory = 'tex/'
@@ -68,9 +69,30 @@ num_train_obs = 100000
 num_test_obs = 10000
 model_obs = sample(nrow(ride_data), num_train_obs+num_test_obs)
 model_data = ride_data[model_obs]
+train_data = head(model_data, num_train_obs)
+test_data = tail(model_data, num_test_obs)
 rm(ride_data)
+rm(model_data)
 gc()
 
-rf = randomForest(usertype ~ tripduration + age + gender_known + female + weekend + morning_rushhour+evening_rushhour+top_subscriber_station+top_customer_station,
-                  data=model_data[1:num_train_obs])
-rf.roc = roc(model_data[1:num_train_obs]$usertype, rf$votes[,2])
+formula_full = formula(usertype ~ tripduration + age + gender_known + female + weekend + morning_rushhour+evening_rushhour+top_subscriber_station+top_customer_station)
+formula_no_demographic = formula(usertype ~ tripduration + weekend + morning_rushhour+evening_rushhour+top_subscriber_station+top_customer_station)
+
+# Logistic regression
+logit = glm(formula_full, data=train_data, family='binomial')
+logit_predictions = predict(logit,newdata=test_data)
+logit_roc = roc(test_data$usertype, logit_predictions)
+
+logit_no_demographic = glm(formula_no_demographic, data=train_data, family='binomial')
+logit_no_demographic_predictions = predict(logit_no_demographic,newdata=test_data)
+logit_no_demographic_roc = roc(test_data$usertype, logit_no_demographic_predictions)
+
+# Random Forest
+rf = randomForest(formula_full, data=train_data)
+rf_predictions = predict(rf,newdata=test_data, type='prob')[,2]
+rf_roc = roc(test_data$usertype, rf_predictions)
+
+rf_no_demographic = glm(formula_no_demographic, data=train_data, family='binomial')
+rf_no_demographic_predictions = predict(logit_no_demographic,newdata=test_data)
+rf_no_demographic_roc = roc(test_data$usertype, logit_no_demographic_predictions)
+
