@@ -198,10 +198,7 @@
 
 \frame{
     \frametitle{Exluding demographic variables decreases performance significantly}
-    \begin{figure}
-        \includegraphics[width=0.8\textwidth]{\string"../plots/roc_plot\string".jpeg}
-    \end{figure}
-}
+    \begin{figure} \includegraphics[width=0.8\textwidth]{\string"../plots/roc_plot\string".jpeg} \end{figure} }
 
 \frame{
 \frametitle{Logistic regression coefficients confirm intuition / exploratory results}
@@ -210,11 +207,36 @@
 
 
 \section{Travel Times}
+
 \frame{
     \frametitle{Sighteseeing Customers are much slower than commuting Subscribers}
     \begin{figure}
         \includegraphics[width=0.8\textwidth]{\string"../plots/plt_mean_diff_period\string".jpeg}
     \end{figure}
+}
+
+\section{Motor Vehicle Collision Data}
+
+\frame{
+\frametitle{Overview}
+\begin{itemize}
+    \item Data on 1.65 mio. crashes involving motor vehicles
+    \item Features include:  Injured / Killed cyclists, pedestrians motorists as well as time and location of incident.
+        \begin{itemize}
+            \item Type of Involved vehicles
+            \item Causal factors (alcohol, speeding etc.)
+            \item Injured / Killed cyclicsts, motorists pedestrians
+            \item Time and location of the accident
+        \end{itemize}
+    \item Potential insurance use case might be offering single trip insurance based on estimated accident risk.
+\end{itemize}
+}
+
+\frame{
+\frametitle{Most dangerous street crossings could be used as a risk indicator}
+\begin{figure}
+\includegraphics[height=0.8\textheight]{\string"../plots/crash_map\string".jpeg}
+\end{figure}
 }
 
 % No number on outline slide
