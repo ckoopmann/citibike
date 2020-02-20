@@ -28,6 +28,19 @@ ride_data = as.data.table(dbGetQuery(con, 'SELECT tripduration,
                                            JOIN stationdata end_stations ON tripdata.end_station_id = end_stations.station_id
                                            ORDER BY RANDOM() LIMIT 100')) 
 
+ride_data[, starttime:= as.POSIXct(starttime, origin='1970-01-01')]
 distance_matrix = mp_get_matrix(mp_matrix(origins='Cologne', destinations='Berlin', key=api_key))
-routes = mp_get_routes(mp_directions(origin='Cologne', destination='Berlin', key=api_key))
 
+date = with_tz(ride_data[1]$starttime, "EST")
+sys_date = with_tz(Sys.time(), "EST")
+wday_diff = as.difftime(wday(date) - wday(sys_date)+7, units="days")
+target_date = sys_date + wday_diff
+target_time = with_tz(as.POSIXct(target_date), "EST")
+hour(target_time) = hour(date)
+minute(target_time) = minute(date)
+
+response = mp_directions(origin=c(ride_data[1]$start_longitude, ride_data[1]$start_latitude), 
+                                     destination=c(ride_data[1]$end_longitude, ride_data[1]$end_latitude),  
+                                     departure_time=target_time,
+                                     key=api_key)
+routes = mp_get_routes(response)
