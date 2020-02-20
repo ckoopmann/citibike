@@ -22,6 +22,7 @@
 
 \usepackage{environ}
 \NewEnviron{myresizeenv}{\resizebox{\linewidth}{!}{\BODY}}
+\NewEnviron{heightresizeenv}{\resizebox*{!}{0.6\textheight}{\BODY}}
 
 \pgfdeclareimage[height=2cm]{logobig}{logo}
 \pgfdeclareimage[height=0.7cm]{logosmall}{logo}
@@ -163,14 +164,39 @@
 }
 
 \section{Classification Model}
-
-\section{Travel Speed}
 \frame{
-\frametitle{Are bikes faster than public transport?}
+\frametitle{Based on exploratory analysis nine features are included in the model training}
 \begin{itemize}
-\item Lorem Ipsum
+    \item \textit{usertype}: Binary target variable (Subscriber=1, Customer=0)
+    \item \textit{tripduration}: Integer variable from the original dataset in seconds
+    \item \textit{age}: Integer variable based on birth year (demographic)
+    \item \textit{gender-known, female}: Binary demographic variables based on original gender variable
+    \item \textit{top-customer-station, top-subscriber-station}: Binary variable indicating wether trip started in one of the top 50 stations for each type
+    \item \textit{weekend, morning-rushour, evening-rushour}: Binary variable based on starttime
 \end{itemize}
 }
+
+\frame{
+\frametitle{Four different models are trained to detect subscribers}
+\begin{itemize}
+    \item Binary target variable (Subscriber=1, Customer=0)
+    \item Apply Logistic Regression and Random Forest algorithms
+    \item Test approaches on full feature set as well as reduced set without demographic variables
+\end{itemize}
+}
+
+\frame{
+    \frametitle{Exluding demographic variables decreases performance significantly}
+    \begin{figure}
+        \includegraphics[width=0.8\textwidth]{\string"../plots/roc_plot\string".jpeg}
+    \end{figure}
+}
+
+\frame{
+\frametitle{Logistic regression coefficients confirm intuition / exploratory results}
+\input{logit_coeffs.tex}
+}
+
 
 % No number on outline slide
 \useheadtemplate{%

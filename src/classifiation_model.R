@@ -8,9 +8,8 @@ library(lubridate)
 library(randomForest)
 library(pROC)
 library(caret)
+library(gridExtra)
 
-plot_directory = 'plots/'
-table_directory = 'tex/'
 db_path = 'data/tripdata.db'
 con <- dbConnect(RSQLite::SQLite(),db_path)
 design = function(x) x + theme_few() + scale_fill_economist() + scale_colour_economist()
@@ -49,19 +48,22 @@ length(intersect(top_customer_stations, top_subscriber_stations))
 ride_data[,top_customer_station := start_station_id %in% top_customer_stations]
 ride_data[,top_subscriber_station := start_station_id %in% top_subscriber_stations]
 
-ride_data[,.(weekend=mean(weekend),
-             morning_rushhour=mean(morning_rushhour),
-             evening_rushhour=mean(evening_rushhour),
-             top_subscriber_station = mean(top_subscriber_station),
-             top_customer_station = mean(top_customer_station),
-             female=mean(female),
-             gender_known=mean(gender_known)), by=usertype]
-
 ride_data[,usertype:=as.factor(usertype)]
 
-rm(list=ls()[ls()!="ride_data"])
+rm(list=ls()[!ls()%in%c("ride_data", "design")])
 
 model_vars = c("usertype", "tripduration", "age", "gender_known", "female", "weekend", "morning_rushhour", "evening_rushhour", "top_subscriber_station", "top_customer_station")
+table_directory = 'tex/'
+variables= data.frame(name=model_vars, type=c("Binary (Target)", "Integer", "Integer (Demographic)", "Binary (Demographic)", "Binary (Demographic)", "Binary","Binary","Binary","Binary","Binary"))
+tex_table = xtable(variables)
+# align(tex_table) = 'c|cccccc'
+print(tex_table,
+      file=paste0(table_directory,'variables.tex'),
+      include.rownames=F,
+      latex.environments=c("heightresizeenv"), 
+      booktabs=T)
+
+
 ride_data = ride_data[,model_vars, with=F]
 
 set.seed(123)
@@ -78,21 +80,52 @@ gc()
 formula_full = formula(usertype ~ tripduration + age + gender_known + female + weekend + morning_rushhour+evening_rushhour+top_subscriber_station+top_customer_station)
 formula_no_demographic = formula(usertype ~ tripduration + weekend + morning_rushhour+evening_rushhour+top_subscriber_station+top_customer_station)
 
+roc_plot_data <- function(roc, modelname) {
+    return(data.table(Model=modelname, Sensitivity=roc$sensitivities, Specificity=roc$specificities))
+}
+
 # Logistic regression
 logit = glm(formula_full, data=train_data, family='binomial')
 logit_predictions = predict(logit,newdata=test_data)
 logit_roc = roc(test_data$usertype, logit_predictions)
+logit_roc_plotdata = roc_plot_data(logit_roc, "Logistic Regression")
+logit_roc_plotdata$Variables = "All"
+
+tex_table = xtable(logit)
+print(tex_table,
+      file=paste0(table_directory,'logit_coeffs.tex'),
+      latex.environments=c("heightresizeenv"), 
+      booktabs=T)
+
 
 logit_no_demographic = glm(formula_no_demographic, data=train_data, family='binomial')
 logit_no_demographic_predictions = predict(logit_no_demographic,newdata=test_data)
 logit_no_demographic_roc = roc(test_data$usertype, logit_no_demographic_predictions)
+logit_no_demographic_roc_plotdata = roc_plot_data(logit_no_demographic_roc, "Logistic Regression")
+logit_no_demographic_roc_plotdata$Variables = "Without Demographics"
 
 # Random Forest
 rf = randomForest(formula_full, data=train_data)
 rf_predictions = predict(rf,newdata=test_data, type='prob')[,2]
 rf_roc = roc(test_data$usertype, rf_predictions)
+rf_roc_plotdata = roc_plot_data(rf_roc, "Random Forest")
+rf_roc_plotdata$Variables = "All"
 
-rf_no_demographic = glm(formula_no_demographic, data=train_data, family='binomial')
-rf_no_demographic_predictions = predict(logit_no_demographic,newdata=test_data)
-rf_no_demographic_roc = roc(test_data$usertype, logit_no_demographic_predictions)
+rf_no_demographic = randomForest(formula_no_demographic, data=train_data, family='binomial')
+rf_no_demographic_predictions = predict(rf_no_demographic,newdata=test_data, type='prob')
+rf_no_demographic_roc = roc(test_data$usertype, rf_no_demographic_predictions[,2])
+rf_no_demographic_roc_plotdata = roc_plot_data(rf_no_demographic_roc, "Random Forest")
+rf_no_demographic_roc_plotdata$Variables = "Without Demographics"
+
+auc_table = data.frame(Model=c("Random Forest", "Logistic Regression", "Random Forest", "Logistic Regression"), 
+                       Variables=c("All","All","Without Demographics", "Without Demographics"),
+                       AUC = round(c(rf_roc$auc, logit_roc$auc, rf_no_demographic_roc$auc, logit_no_demographic_roc$auc), 3))
+
+plot_directory = 'plots/'
+roc_plot = design(ggplot(rbind(logit_roc_plotdata, rf_roc_plotdata, logit_no_demographic_roc_plotdata, rf_no_demographic_roc_plotdata), aes(y=Sensitivity, x=1-Specificity, col=Model, lty=Variables)) + geom_line()) +
+    geom_abline(intercept=0, slope=1, lty='dashed') + 
+    labs(x='1-Specificity (Share of wrongly classified Customers)',
+        y= 'Sensitivity (Share of correctly classified Subscribers)') +
+    annotation_custom(tableGrob(auc_table, theme=ttheme_minimal(), rows=NULL), xmin=0.5, xmax=0.9, ymin=0, ymax=0.25)
+ggsave(roc_plot, file = paste0(plot_directory, 'roc_plot.jpeg'), width=10, height=5) 
 
