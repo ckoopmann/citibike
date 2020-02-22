@@ -85,6 +85,30 @@
 
 }
 
+\section{Overview}
+
+\frame{
+\frametitle{Chosen approach}
+\begin{enumerate}
+  \item User Classification
+    \begin{enumerate}
+    \item Download monthly data for 2018 from citybike {\tiny (\textit{data\_download.R})}
+    \item Clean/Format data and load whole dataset into \textit{SQLLite} Database  {\tiny (\textit{data\_preparation.R})}
+    \item Explorative Analysis of Data regarding user demographic, trip time and duration.{\tiny (\textit{explorative\_analysis\_users.R} )}
+    \item Spatial analysis of data regarding geographic usage patterns.{\tiny (\textit{explorative\_analysis\_network.R} )}
+    \item Train/Test different classification models.{\tiny (\textit{classification\_models.R})}
+    \end{enumerate}
+  \item Travel times
+    \begin{enumerate}
+    \item Analysis of travel times.{\tiny (\textit{travel\_times.R})}
+    \end{enumerate}
+ \item Collision Data
+   \begin{enumerate}
+    \item Exploratory Analysis of collision data.{\tiny (\textit{collision\_data.R})}
+    \end{enumerate}
+\end{enumerate}
+}
+
 \section{Exploratory Analysis}
 
 \frame{
