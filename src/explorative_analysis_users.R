@@ -12,6 +12,7 @@ db_path = 'data/tripdata.db'
 con <- dbConnect(RSQLite::SQLite(),db_path)
 design = function(x) x + theme_few() + scale_fill_economist() + scale_colour_economist()
 
+counts = as.data.table(dbGetQuery(con, 'SELECT COUNT(DISTINCT bikeid) AS Bikes, COUNT(DISTINCT start_station_id) as stations FROM tripdata'))
 
 ride_data = as.data.table(dbGetQuery(con, 'SELECT tripduration, starttime, usertype, birth_year, gender FROM tripdata'))
 ride_data[, age:= 2018-birth_year]

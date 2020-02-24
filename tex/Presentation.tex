@@ -85,31 +85,25 @@
 
 }
 
-\section{Overview}
+\section{Exploratory Analysis}
 
 \frame{
-\frametitle{Chosen approach}
-\begin{enumerate}
-  \item User Classification
-    \begin{enumerate}
-    \item Download monthly data for 2018 from citybike {\tiny (\textit{data\_download.R})}
-    \item Clean/Format data and load whole dataset into \textit{SQLLite} Database  {\tiny (\textit{data\_preparation.R})}
-    \item Explorative Analysis of Data regarding user demographic, trip time and duration.{\tiny (\textit{explorative\_analysis\_users.R} )}
-    \item Spatial analysis of data regarding geographic usage patterns.{\tiny (\textit{explorative\_analysis\_network.R} )}
-    \item Train/Test different classification models.{\tiny (\textit{classification\_models.R})}
-    \end{enumerate}
-  \item Travel times
-    \begin{enumerate}
-    \item Analysis of travel times.{\tiny (\textit{travel\_times.R})}
-    \end{enumerate}
- \item Collision Data
-   \begin{enumerate}
-    \item Exploratory Analysis of collision data.{\tiny (\textit{collision\_data.R})}
-    \end{enumerate}
-\end{enumerate}
+\frametitle{Overview}
+\begin{itemize}
+ \item Ca. 17.5 mio records of citibike trips in 2018
+ \begin{itemize}
+     \item  Network of 819 stations
+     \item  Fleet of 15244 bikes
+ \end{itemize}
+ \item Downloaded as monthly csv-files then aggregated in SQL-Lite database
+ \item 14 Variables from 3 categories (excl. bike-id):
+ \begin{itemize}
+     \item \underline{Demographics:} birth year, gender, usertype
+     \item \underline{Time:} start/stop-time, trip duration
+     \item \underline{Location:} id, name, latitude / longitude of start- and end-station
+ \end{itemize}
+\end{itemize}
 }
-
-\section{Exploratory Analysis}
 
 \frame{
 \frametitle{Customers seem to be older, more diverse and take their time}
@@ -117,7 +111,7 @@
 }
 
 \frame{
-    \frametitle{60 Percent of all Customers born in 1969 ?}
+    \frametitle{60 Percent of all customers born in 1969 ?}
     \begin{figure}
         \includegraphics[width=0.8\textwidth]{\string"../plots/histogram_age_by_type\string".jpeg}
     \end{figure}
@@ -125,14 +119,14 @@
 
 
 \frame{
-    \frametitle{Users with unknown Gender seem to have a data quality problem}
+    \frametitle{Users with unknown gender seem to have a data quality problem}
     \begin{figure}
         \includegraphics[width=0.8\textwidth]{\string"../plots/histogram_age_by_type_gender\string".jpeg}
     \end{figure}
 }
 
 \frame{
-\frametitle{Excluding data quality issues Customers are actually younger}
+\frametitle{Excluding data quality issues customers are actually younger}
 \input{averages_knowngender.tex}
 }
 
@@ -145,14 +139,14 @@
 }
 
 \frame{
-\frametitle{Commuting Subscribers vs. Vacationing Customers}
+\frametitle{Commuting subscribers vs. vacationing customers}
 \begin{figure}
 \includegraphics[width=0.8\textwidth]{\string"../plots/histogram_hour_by_type\string".jpeg}
 \end{figure}
 }
 
 \frame{
-\frametitle{Commuting Subscribers vs. Vacationing Customers}
+\frametitle{Commuting subscribers vs. vacationing Customers}
 \begin{figure}
 \includegraphics[width=0.8\textwidth]{\string"../plots/histogram_weekday_by_type\string".jpeg}
 \end{figure}
@@ -182,7 +176,7 @@
 \begin{columns}
     \begin{column}{0.48\textwidth}
         \begin{itemize}
-            \item Longer Trips
+            \item Longer trips
             \item Peak during weekend and afternoon hours
             \item High concentration of trips around tourist hotspots (Central Park)
             \item Data Quality Issues regarding demographic data
@@ -190,7 +184,7 @@
     \end{column}
     \begin{column}{0.48\textwidth}
         \begin{itemize}
-            \item Shorter Trips 
+            \item Shorter trips 
             \item Peak during the week and morning/evening rush hours
             \item Distributed across variety of stations in the business district
         \end{itemize}
@@ -199,6 +193,18 @@
 }
 
 \section{Classification Model}
+
+\frame{
+\frametitle{Overview}
+\begin{itemize}
+    \item Binary target variable (Subscriber=1, Customer=0)
+    \item Nine input variables chosen / constructed based on exploratory analysis (see next)
+    \item Tested modelling algorithms:  Logistic Regression and Random Forest
+    \item Randomly selected 100k/10k training/test observations
+    \item Each algorithm tested on full feature set as well as reduced set without demographic variables
+\end{itemize}
+}
+
 \frame{
 \frametitle{Based on exploratory analysis nine features are included in the model training}
 \begin{itemize}
@@ -212,17 +218,9 @@
 }
 
 \frame{
-\frametitle{Four different models are trained to detect subscribers}
-\begin{itemize}
-    \item Binary target variable (Subscriber=1, Customer=0)
-    \item Apply Logistic Regression and Random Forest algorithms
-    \item Test approaches on full feature set as well as reduced set without demographic variables
-\end{itemize}
-}
-
-\frame{
     \frametitle{Exluding demographic variables decreases performance significantly}
-    \begin{figure} \includegraphics[width=0.8\textwidth]{\string"../plots/roc_plot\string".jpeg} \end{figure} }
+    \begin{figure} \includegraphics[width=0.8\textwidth]{\string"../plots/roc_plot\string".jpeg} \end{figure} 
+}
 
 \frame{
 \frametitle{Logistic regression coefficients confirm intuition / exploratory results}
@@ -231,9 +229,23 @@
 
 
 \section{Travel Times}
+\frame{
+\frametitle{Overview}
+\begin{itemize}
+    \item Compare duration of citybike trips to reference trip times predicted by \textit{Google Maps}
+    \item Evaluate 1000 randomly selected citybike trips that did not start and end at the same station
+    \item \textit{Google Maps} reference times: 
+        \begin{itemize}
+            \item Route from start to end station coordinates
+            \item Starttime: next timepoint in the future with same weekday, hour and minute
+            \item Shortest route for travelmode \textit{transit} and \textit{driving}
+        \end{itemize}
+\end{itemize}
+}
+
 
 \frame{
-    \frametitle{Sighteseeing Customers are much slower than commuting Subscribers}
+    \frametitle{Sighteseeing customers are much slower than commuting subscribers}
     \begin{figure}
         \includegraphics[width=0.8\textwidth]{\string"../plots/plt_mean_diff_period\string".jpeg}
     \end{figure}

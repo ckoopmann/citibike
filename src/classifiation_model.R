@@ -91,7 +91,7 @@ logit_roc = roc(test_data$usertype, logit_predictions)
 logit_roc_plotdata = roc_plot_data(logit_roc, "Logistic Regression")
 logit_roc_plotdata$Variables = "All"
 
-tex_table = xtable(logit)
+tex_table = xtable(digits=4, summary(logit)$coefficients[,c(1,4)])
 print(tex_table,
       file=paste0(table_directory,'logit_coeffs.tex'),
       latex.environments=c("heightresizeenv"), 
