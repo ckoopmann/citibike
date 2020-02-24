@@ -1,4 +1,4 @@
-# Source Code
+# R-Source Code
 This directory contains the **R** source code used to obtain all results presented in the slides.
 
 ## Contents

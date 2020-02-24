@@ -1,4 +1,4 @@
-# Source Code
+# Latex Code
 This directory contains the **LaTex** code used to generate the presentation slides based on the output of the R-Code.
 
 ## Contents
