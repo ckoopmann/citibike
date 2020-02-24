@@ -16,5 +16,5 @@ The repository contains the following files:
 When reproducing the results following steps need to be followed:
 * Install necesssary R packages that are loaded in any of the scripts.
 * Create **plots** and **data** directories at the top level of this repository or change respective paths in the script
-* Create google maps api key and add it as a environment variable **api_key**
+* Generate google maps api key and add it as a environment variable **api_key**
 * Scripts need to be run in above order with working directory set to top level of this repository
